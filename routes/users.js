@@ -64,11 +64,18 @@ router.get('/logout', (req,res)=>{
 })
    
 // cart
-router.get('/cart', verifyLogin, (req,res)=>{
-  res.render("user/cart")
+router.get('/cart', verifyLogin, async(req,res)=>{
+  let products=await userHelpers.getCartProducts(req.session.user._id)
+  console.log(products)
+  res.render('user/cart')
 })
 
-
+// add to cart
+router.get('/add-to-cart/:id', verifyLogin, (req,res)=>{
+  userHelpers.addToCart(req.params.id,req.session.user._id).then(()=>{
+    res.redirect('/')
+  })
+})
 
 
 module.exports = router;
